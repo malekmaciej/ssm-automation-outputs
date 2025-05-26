@@ -16,8 +16,21 @@ The main automation executes Child1, parses its output (ProcessListToJSON step),
 
 In this repo you will find example of such solution.
 
+## Deployment
 
-Reference:
+Configuration:
+
+- region - `Ireland (eu-west-1)`
+- profile - `default`
+  
+`./deploy.sh`
+
+## Execution
+
+`aws ssm start-automation-execution --document-name main`
+
+## Reference
+
 - https://docs.aws.amazon.com/systems-manager/latest/userguide/automation-action-executeAutomation.html
 
 ## Requirements
@@ -55,4 +68,6 @@ No inputs.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_main_ssm_document_name"></a> [main\_ssm\_document\_name](#output\_main\_ssm\_document\_name) | Name of the Main SSM document |

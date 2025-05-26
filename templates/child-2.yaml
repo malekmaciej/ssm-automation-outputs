@@ -1,6 +1,6 @@
 ---
 schemaVersion: "0.3"
-description: This automation document triggers Golden AMI creation workflow.
+description: Example child automation with two required inputs
 assumeRole: "{{AutomationAssumeRole}}"
 parameters:
   AutomationAssumeRole:

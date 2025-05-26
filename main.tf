@@ -18,14 +18,14 @@ resource "aws_iam_role" "ssm_automation_role" {
 }
 
 resource "aws_iam_policy" "pass_role_policy" {
-  name        = "ssm-pass-role-policy"
+  name = "ssm-pass-role-policy"
 
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "iam:PassRole"
         ]
         Resource = "*"
