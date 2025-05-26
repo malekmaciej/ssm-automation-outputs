@@ -1,0 +1,47 @@
+---
+schemaVersion: "0.3"
+description: This automation document triggers Golden AMI creation workflow.
+assumeRole: "{{AutomationAssumeRole}}"
+parameters:
+  AutomationAssumeRole:
+    type: String
+    description: The ARN of the role that allows Automation to perform the actions on your behalf.
+    default: "${automation_role}"
+
+mainSteps:
+  - name: Child1
+    action: aws:executeAutomation
+    inputs:
+      DocumentName: child-1
+
+  - name: ProcessListToJSON
+    action: aws:executeScript
+    inputs:
+      Runtime: python3.11
+      Handler: ProcessListToJSON
+      InputPayload:
+        InputList: '{{ Child1.Output}}'
+      Script: |-
+        import json
+        def ProcessListToJSON(event, context):
+            input_list = event.get('InputList', [])
+            result = {
+             "CurrentDate": input_list[0],
+             "RandomString": input_list[1]
+            }
+            return result
+    outputs:
+      - Name: CurrentDate
+        Selector: $.Payload.CurrentDate
+        Type: String
+      - Name: RandomString
+        Selector: $.Payload.RandomString
+        Type: String
+
+  - name: Child2
+    action: aws:executeAutomation
+    inputs:
+      DocumentName: child-2
+      RuntimeParameters:
+        Date: '{{ ProcessListToJSON.CurrentDate }}'
+        UUID: '{{ ProcessListToJSON.RandomString }}'  

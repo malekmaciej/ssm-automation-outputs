@@ -1,0 +1,46 @@
+---
+schemaVersion: "0.3"
+description: This automation document triggers Golden AMI creation workflow.
+assumeRole: "{{AutomationAssumeRole}}"
+parameters:
+  AutomationAssumeRole:
+    type: String
+    description: The ARN of the role that allows Automation to perform the actions on your behalf.
+    default: "${automation_role}"
+  Date:
+    type: String
+    description: The date to be used in the automation.
+  UUID:
+    type: String
+    description: The UUID to be used in the automation.
+
+mainSteps:
+  - name: CurrentDate
+    action: aws:executeScript
+    inputs:
+      Runtime: python3.11
+      Handler: PrintDate
+      InputPayload:
+        date: "{{ Date }}"
+      Script: |-
+        def PrintDate(event, context):
+            return {"CurrentDate": event["date"]}
+    outputs:
+      - Name: Value
+        Selector: $.Payload.CurrentDate
+        Type: String
+
+  - name: UUID
+    action: aws:executeScript
+    inputs:
+      Runtime: python3.11
+      Handler: UUID
+      InputPayload:
+        uuid: "{{ UUID }}"
+      Script: |-
+        def UUID(event, context):
+            return {"UUID": str(event["uuid"])}
+    outputs:
+      - Name: UUID
+        Selector: $.Payload.UUID
+        Type: String
